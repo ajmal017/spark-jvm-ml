@@ -6,8 +6,8 @@ parser.add_argument('--ram', dest='ram', default=4, help='number of gigabytes yo
 
 def GetNextConfig(memorySize):
     # return true if there is another option, the args to pass and a name for a file
-    heapSizesDriver = (str(i) + "g" for i in range(int(memorySize)))
-    heapSizesExec = (str(i) + "g" for i in range(int(memorySize)))
+    heapSizesDriver = (str(i+1) + "g" for i in range(int(memorySize)))
+    heapSizesExec = (str(i+1) + "g" for i in range(int(memorySize)))
     # heapSizes = ["1g", "2g", "3g", "4g"]
     # threshold = ["1", "2", "3", "4"]
     algorithms = ["+UseParallelGC", "+UseG1GC"]
@@ -55,13 +55,17 @@ if __name__ == "__main__":
 
     queriesToRun = ["01", "02", "03"]
 
-    executorOptions = '" --num-executors 1 --conf spark.executor.extraJavaOptions=-Dlog4j.configuration=-Dlog4j.configuration=file:///mnt/c/Users/JohnG/Desktop/cs239/spark-tpc-ds-performance-test/log4j.properties --conf spark.sql.crossJoin.enabled=true"'
-    driverOptions = '" --driver-java-options -Dlog4j.configuration=file:///mnt/c/Users/JohnG/Desktop/cs239/spark-tpc-ds-performance-test/log4j.properties"'
-    
-
     testPath = '"/mnt/c/Users/JohnG/Desktop/Queries/"'
     outPath = '"/mnt/c/Users/JohnG/Desktop/cs239/"'
     sparkSqlPath = '"/usr/local/spark/"'
+
+    benchmarkPath = "/mnt/c/Users/JohnG/Desktop/cs239/spark-tpc-ds-performance-test"
+    benchmarkFile = benchmarkPath + "/log4j.properties"
+
+    executorOptions = '" --num-executors 1 ' \
+                      '--conf spark.executor.extraJavaOptions=-Dlog4j.configuration=-Dlog4j.configuration=file://"' + \
+                      benchmarkFile + '"--conf spark.sql.crossJoin.enabled=true"'
+    driverOptions = '" --driver-java-options -Dlog4j.configuration=file://"' + benchmarkFile
 
     print("#!/bin/bash")
 
